@@ -2,7 +2,7 @@ name: Fleet Dashboard
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "7,12,17,22,27,32,37,42,47,52,57 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -21,19 +21,22 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install requests
         run: pip install requests
 
       - name: Generate dashboard
         run: python dashboard.py
 
-      - name: Commit and push dashboard
+      - name: Commit dashboard
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add dashboard.html
 
-          git diff --cached --quiet || git commit -m "Update dashboard"
-
-          git push
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update dashboard"
+            git push
+          fi
