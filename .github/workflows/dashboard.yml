@@ -1,39 +1,33 @@
 name: Fleet Dashboard
 
 on:
-  schedule:
-    - cron: "*/5 * * * *"
   workflow_dispatch:
 
-*ermissions:
-  contents: write
-
-job*:
+jobs:
   build:
-    runs*on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
-    * - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    * - name: Setup Python
-        uses* actions/setup-python@v5
-        w*th:
-          python-version: "3.*2"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - name: Install Dependen*ies
-        run: |
-          pip i*stall requests
+      - run: pip install requests
 
-      - name: Gene*ate Dashboard
-        run: |
-     *    python dashboard.py
+      - run: python dashboard.py
 
-      - n*me: Publish Dashboard
-        run:*|
-          git config user.name g*thub-actions
-          git config *ser.email github-actions@github.co*
+      - run: ls -la
 
-          git add dashboard.html*
-          git commit -m "update d*shboard" || echo "No changes"
+      - run: cat dashboard.html | head -20
 
-   *      git push
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          git add .
+
+          git commit -m "update" || echo "nothing to commit"
+
+          git push
