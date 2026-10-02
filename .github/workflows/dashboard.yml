@@ -1,6 +1,8 @@
 name: Fleet Dashboard
 
 on:
+  schedule:
+    - cron: "*/1 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -18,16 +20,13 @@ jobs:
 
       - run: python dashboard.py
 
-      - run: ls -la
-
-      - run: cat dashboard.html | head -20
-
       - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
 
-          git add .
+          git add dashboard.html
 
-          git commit -m "update" || echo "nothing to commit"
+          git commit -m "update dashboard" || echo "No changes"
 
           git push
+`
