@@ -5,38 +5,36 @@ on:
     - cron: "*/5 * * * *"
   workflow_dispatch:
 
-permissions:
+*ermissions:
   contents: write
 
-jobs:
+job*:
   build:
-    runs-on: ubuntu-latest
-
-    env:
-      VEHICLES: ${{ secrets.VEHICLES }}
+    runs-on: ubuntu-lat*st
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actio*s/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - name: Setup*Python
+        uses: actions/setup*python@v5
+       *with:
+          python-version: "3*12"
 
-      - name: Install Dependencies
+      - name: Install Depende*cies
         run: |
-          pip install requests
+         *pip*install requests
 
-      - name: Generate Dashboard
+      - name: Ge*erate Dashboard
         run: |
-          python dashboard.py
+*        *python dashboard.py
 
-      - name: Publish
+      - name:*Publish
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          g*t config user.name github-actions
+*        *git*config user.email github-actions@g*thub.com
 
-          git add dashboard.html
-          git commit -m "update dashboard" || echo "No changes"
+          git add dashbo*rd.html
+
+          git commit -m "*pdate dashboard" || echo "No chang*s"
 
           git push
