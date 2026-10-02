@@ -10,31 +10,30 @@ on:
 
 job*:
   build:
-    runs-on: ubuntu-lat*st
+    runs*on: ubuntu-latest
 
     steps:
-      - uses: actio*s/checkout@v4
+    * - uses: actions/checkout@v4
 
-      - name: Setup*Python
-        uses: actions/setup*python@v5
-       *with:
-          python-version: "3*12"
+    * - name: Setup Python
+        uses* actions/setup-python@v5
+        w*th:
+          python-version: "3.*2"
 
-      - name: Install Depende*cies
+      - name: Install Dependen*ies
         run: |
-         *pip*install requests
+          pip i*stall requests
 
-      - name: Ge*erate Dashboard
+      - name: Gene*ate Dashboard
         run: |
-*        *python dashboard.py
+     *    python dashboard.py
 
-      - name:*Publish
-        run: |
-          g*t config user.name github-actions
-*        *git*config user.email github-actions@g*thub.com
+      - n*me: Publish Dashboard
+        run:*|
+          git config user.name g*thub-actions
+          git config *ser.email github-actions@github.co*
 
-          git add dashbo*rd.html
+          git add dashboard.html*
+          git commit -m "update d*shboard" || echo "No changes"
 
-          git commit -m "*pdate dashboard" || echo "No chang*s"
-
-          git push
+   *      git push
