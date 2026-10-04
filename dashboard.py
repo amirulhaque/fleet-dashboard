@@ -44,10 +44,6 @@ with open("vehicles.txt", encoding="utf-8") as f:
             lat = lat_match.group(1) if lat_match else ""
             lon = lon_match.group(1) if lon_match else ""
 
-            # Debug
-            if vehicle == "AK-99719-chotu":
-                print(raw)
-
             if status.lower() == "move":
                 status_color = "green"
             elif status.lower() == "stop":
@@ -60,6 +56,7 @@ with open("vehicles.txt", encoding="utf-8") as f:
                 raw
             )
 
+            # Use address from AKSH first
             if address_match and address_match.group(1).strip():
 
                 address = address_match.group(1)
@@ -83,6 +80,12 @@ with open("vehicles.txt", encoding="utf-8") as f:
                         f"{lat},{lon}"
                     )
 
+                    # Shorten address
+                    parts = address.split(",")
+
+                    if len(parts) > 4:
+                        address = ", ".join(parts[:4])
+
                 except Exception:
 
                     address = f"{lat},{lon}"
@@ -97,12 +100,17 @@ with open("vehicles.txt", encoding="utf-8") as f:
             rows += f"""
             <tr>
                 <td>{vehicle}</td>
+
                 <td style="color:{status_color};font-weight:bold">
                     {status}
                 </td>
+
                 <td>{speed} km/h</td>
+
                 <td>{gps_time}</td>
+
                 <td>{address}</td>
+
                 <td>{map_html}</td>
             </tr>
             """
@@ -123,6 +131,7 @@ html = f"""
 <html>
 
 <head>
+
 <meta charset="UTF-8">
 <meta http-equiv="refresh" content="60">
 
