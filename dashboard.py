@@ -44,7 +44,10 @@ with open("vehicles.txt", encoding="utf-8") as f:
             lat = lat_match.group(1) if lat_match else ""
             lon = lon_match.group(1) if lon_match else ""
 
-            # Status color
+            # Debug
+            if vehicle == "AK-99719-chotu":
+                print(raw)
+
             if status.lower() == "move":
                 status_color = "green"
             elif status.lower() == "stop":
@@ -52,7 +55,6 @@ with open("vehicles.txt", encoding="utf-8") as f:
             else:
                 status_color = "orange"
 
-            # Address from AKSH
             address_match = re.search(
                 r'address:"([^"]*)"',
                 raw
@@ -85,27 +87,22 @@ with open("vehicles.txt", encoding="utf-8") as f:
 
                     address = f"{lat},{lon}"
 
-            map_html = f'''
+            map_html = f"""
             <a href="https://maps.google.com/?q={lat},{lon}"
                target="_blank">
                Open Map
             </a>
-            '''
+            """
 
             rows += f"""
             <tr>
                 <td>{vehicle}</td>
-
                 <td style="color:{status_color};font-weight:bold">
                     {status}
                 </td>
-
                 <td>{speed} km/h</td>
-
                 <td>{gps_time}</td>
-
                 <td>{address}</td>
-
                 <td>{map_html}</td>
             </tr>
             """
