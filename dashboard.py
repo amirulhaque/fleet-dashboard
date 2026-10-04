@@ -9,7 +9,7 @@ NEPAL_TZ = ZoneInfo("Asia/Kathmandu")
 
 rows = ""
 
-with open("vehicles.txt") as f:
+with open("vehicles.txt", encoding="utf-8") as f:
 
     for line in f:
 
@@ -29,33 +29,22 @@ with open("vehicles.txt") as f:
 
             raw = r.json()["d"]
 
-            speed = re.search(
-                r'speed:"([^"]*)"', raw
-            ).group(1)
+            speed_match = re.search(r'speed:"([^"]*)"', raw)
+            speed = speed_match.group(1) if speed_match else "0"
 
-            gps_time = re.search(
-                r'deviceUtcDate:"([^"]*)"', raw
-            ).group(1)
+            gps_match = re.search(r'deviceUtcDate:"([^"]*)"', raw)
+            gps_time = gps_match.group(1) if gps_match else ""
 
-            status_match = re.search(
-                r'status:"([^"]*)"', raw
-            )
+            status_match = re.search(r'status:"([^"]*)"', raw)
+            status = status_match.group(1) if status_match else "Unknown"
 
-            status = (
-                status_match.group(1)
-                if status_match
-                else "Unknown"
-            )
+            lat_match = re.search(r'latitude:"([^"]*)"', raw)
+            lon_match = re.search(r'longitude:"([^"]*)"', raw)
 
-            lat = re.search(
-                r'latitude:"([^"]*)"', raw
-            ).group(1)
+            lat = lat_match.group(1) if lat_match else ""
+            lon = lon_match.group(1) if lon_match else ""
 
-            lon = re.search(
-                r'longitude:"([^"]*)"', raw
-            ).group(1)
-
-            # Status Colors
+            # Status color
             if status.lower() == "move":
                 status_color = "green"
             elif status.lower() == "stop":
@@ -63,7 +52,7 @@ with open("vehicles.txt") as f:
             else:
                 status_color = "orange"
 
-            # Address
+            # Address from AKSH
             address_match = re.search(
                 r'address:"([^"]*)"',
                 raw
@@ -85,26 +74,23 @@ with open("vehicles.txt") as f:
                         timeout=20
                     )
 
-                    address = geo.json().get(
+                    geo_data = geo.json()
+
+                    address = geo_data.get(
                         "display_name",
                         f"{lat},{lon}"
                     )
 
-                    parts = address.split(",")
-
-                    if len(parts) > 4:
-                        address = ",".join(parts[:4])
-
-                except:
+                except Exception:
 
                     address = f"{lat},{lon}"
 
-            map_html = f"""
+            map_html = f'''
             <a href="https://maps.google.com/?q={lat},{lon}"
                target="_blank">
                Open Map
             </a>
-            """
+            '''
 
             rows += f"""
             <tr>
@@ -121,7 +107,6 @@ with open("vehicles.txt") as f:
                 <td>{address}</td>
 
                 <td>{map_html}</td>
-
             </tr>
             """
 
@@ -141,7 +126,6 @@ html = f"""
 <html>
 
 <head>
-
 <meta charset="UTF-8">
 <meta http-equiv="refresh" content="60">
 
